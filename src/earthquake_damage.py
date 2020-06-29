@@ -1,6 +1,9 @@
 import numpy as np 
 import pandas as pd 
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from mpl_toolkits.mplot3d import Axes3D
 
 def damage_distributions(col_name, df):
     data = [df[df['damage_grade']==1][col_name], 
@@ -29,3 +32,21 @@ if __name__ == "__main__":
     one = df_combined[df_combined['damage_grade']==1]
     two = df_combined[df_combined['damage_grade']==2]
     three = df_combined[df_combined['damage_grade']==3]
+
+    X = df_combined[['count_floors_pre_eq', 'age', 'area_percentage', 'height_percentage']]
+    ss = StandardScaler()
+    X_scaled = ss.fit_transform(X)
+    pca = PCA(n_components=3, random_state=42)
+    p_components = pca.fit_transform(X_scaled)
+    df_pca = pd.DataFrame(data = p_components, columns = ['pc1', 'pc2', 'pc3'], index=df_combined.index)
+    df_pca = pd.concat([df_pca, df_combined[['damage_grade']]], axis=1)
+
+    targets = [1, 2, 3]
+    color = ['yellow', 'orange', 'red']
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    for t, c in zip(targets, color):
+        idx = pca_df['damage_grade'] == t
+        ax.scatter(pca_3_df.loc[idx, 'pc1'], pca_3_df.loc[idx, 'pc2'], pca_3_df.loc[idx, 'pc2'], color=c)
+
