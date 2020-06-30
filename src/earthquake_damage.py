@@ -29,8 +29,8 @@ def damage_scatter_two_Components(x_col, y_col, low_df, med_df, high_df, save=Fa
     plt.show()
 
 if __name__ == "__main__":
-    pca = False
-    plot_3d_gif = False
+    pca = True
+    plot_3d_gif = True
     df_train = pd.read_csv('data/train_values.csv')
     df_train_labels = pd.read_csv('data/train_labels.csv')
     df_combined = df_train.merge(df_train_labels, left_index=True, right_index=True)
@@ -58,7 +58,7 @@ if __name__ == "__main__":
                 ax = fig.add_subplot(111, projection='3d')
                 for t, c in zip(targets, color):
                     idx = df_pca['damage_grade'] == t
-                    ax.scatter(df_pca.loc[idx, 'pc1'], df_pca.loc[idx, 'pc2'], df_pca.loc[idx, 'pc2'], color=c, label=labels[t-1])
+                    ax.scatter(df_pca.loc[idx, 'pc1'], df_pca.loc[idx, 'pc2'], df_pca.loc[idx, 'pc3'], color=c, label=labels[t-1])
                 ax.set_title('PCA with 3 Components', fontsize=20, loc= 'left')
                 ax.set_xlabel('PC 1', fontsize=13)
                 ax.set_ylabel('PC 2', fontsize=13)
