@@ -29,8 +29,8 @@ def damage_scatter_two_Components(x_col, y_col, low_df, med_df, high_df, save=Fa
     plt.show()
 
 if __name__ == "__main__":
-    pca = True
-    plot_3d_gif = True
+    pca = False
+    plot_3d_gif = False
     df_train = pd.read_csv('data/train_values.csv')
     df_train_labels = pd.read_csv('data/train_labels.csv')
     df_combined = df_train.merge(df_train_labels, left_index=True, right_index=True)
@@ -79,3 +79,19 @@ if __name__ == "__main__":
                         append_images=images[1:],
                         duration=150,
                         loop=0)
+
+    df_modelling = df_combined[['age', 'area_percentage', 'height_percentage', 'land_surface_condition',
+                           'foundation_type', 'position', 'has_superstructure_adobe_mud', 
+                           'has_superstructure_mud_mortar_stone', 'has_superstructure_stone_flag',
+                           'has_superstructure_cement_mortar_stone', 'has_superstructure_mud_mortar_brick',
+                           'has_superstructure_cement_mortar_brick', 'has_superstructure_timber',
+                           'has_superstructure_bamboo', 'has_superstructure_rc_non_engineered',
+                            'has_superstructure_rc_engineered', 'has_superstructure_other', 'damage_grade']]
+    df_modelling = df_modelling = pd.get_dummies(df_modelling, prefix=['lsc', 'ft', 'pos'], 
+                            columns=['land_surface_condition', 'foundation_type', 'position'], drop_first=True)
+    ss = StandardScaler()
+    y = df_modelling.pop('damage_grade')
+    X = df_modelling.values
+    X_scaled = ss.fit_transform(X)
+
+    
