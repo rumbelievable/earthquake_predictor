@@ -5,7 +5,7 @@
 ### Table of Contents
 - [The Data](##the-data)
 - [EDA](##exploratory-data-analysis)
-- [Featurization](##featurization)
+- [Principal Component Analysis](###principal-component-analysis)
 - [Modelling](##modelling)
 - [Results](##results)
 - [Analysis](##analysis)
@@ -16,15 +16,38 @@
 The data was collected through surveys by Kathmandu Living Labs and the Central Bureau of Statistics, which works under the National Planning Commission Secretariat of Nepal. This survey is one of the largest post-disaster datasets ever collected, containing valuable information on earthquake impacts, household conditions, and socio-economic-demographic statistics<sup>1</sup>.
 
 ## Exploratory Data Analysis
+
+Imbalanced classes:
+
+![](images/classbalances.png)
+
 ![](images/scaled_structure_counts.png)
 
 ![](images/structure_types_damage_counts.png)
 
-## Featurization
+### Principal Component Analysis
+
+![](images/pca_best.gif)
 
 ## Modelling
 
+Features included: `'age', 'area_percentage', 'height_percentage', 'land_surface_condition',
+                           'foundation_type', 'position', 'has_superstructure_adobe_mud', 
+                           'has_superstructure_mud_mortar_stone', 'has_superstructure_stone_flag',
+                           'has_superstructure_cement_mortar_stone', 'has_superstructure_mud_mortar_brick',
+                           'has_superstructure_cement_mortar_brick', 'has_superstructure_timber',
+                           'has_superstructure_bamboo', 'has_superstructure_rc_non_engineered',
+                            'has_superstructure_rc_engineered', 'has_superstructure_other', 'damage_grade'`
+
+### Random Forest
+
+My first random forest included: n_estimators=100, max_depth=4, n_jobs=-2, random_state=9, class_weight='balanced'
+
 ## Results
+
+|  Model  |  Micro Averaged F1-Score  |
+|---------|---------------------------|
+|   RF    |            .40            |
 
 ## Analysis
 
