@@ -6,6 +6,10 @@ from sklearn.preprocessing import StandardScaler
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as animation
 from PIL import Image,ImageFilter
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score, recall_score, precision_score
 
 plt.style.use('ggplot')
 
@@ -27,6 +31,28 @@ def damage_scatter_two_Components(x_col, y_col, low_df, med_df, high_df, save=Fa
     if save:
         plt.savefig(f'images/{x_col} vs {y_col}', dpi=80)
     plt.show()
+
+def tts(X, y, strat=True):
+    if strat:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y)
+        return X_train, X_test, y_train, y_test
+    else:
+        X_train, X_test, y_train, y_test = train_test_split(X, y)
+        return X_train, X_test, y_train, y_test
+
+def standardize(X):
+    ss = StandardScaler(with_mean=True, with_std=True)
+    X_scaled = ss.fit_transform(X)
+    return X_scaled
+
+def random_forest(X, y, n_estimators, max_depth):
+    rf = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, n_jobs=-2, random_state=9, class_weight='balanced')
+    X_train, X_test, y_train, y_test = tts(X, y)
+    X_train_scaled = standardize(X_train)
+    X_test_scaled = standardize(X_test)
+    rf.fit(X_train_scaled, y_train)
+    pass
+
 
 if __name__ == "__main__":
     pca = False
@@ -89,9 +115,10 @@ if __name__ == "__main__":
                             'has_superstructure_rc_engineered', 'has_superstructure_other', 'damage_grade']]
     df_modelling = df_modelling = pd.get_dummies(df_modelling, prefix=['lsc', 'ft', 'pos'], 
                             columns=['land_surface_condition', 'foundation_type', 'position'], drop_first=True)
-    ss = StandardScaler()
     y = df_modelling.pop('damage_grade')
     X = df_modelling.values
-    X_scaled = ss.fit_transform(X)
-
-    
+    X_train, X_test, y_train, y_test = tts(X, y)
+    ss = StandardScaler()
+    X_train_scaled = ss.fit_transform(X_train)
+    X_test_scaled = ss.transform(X_test)
+    f1_score()
