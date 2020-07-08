@@ -26,29 +26,29 @@ The above plot represents the damage count for different structure types. As you
 I also wanted to look into the features with a coded type, like `land_surface_condition`, `roof_type`, `foundation_type`, `ground_floor_type`, and `building_position` to see if they would give any indication to the damage. I found that `land_surface_condition` and `building_position` didn't give much away as you can see below:
 
 ![](images/damage_vs_landsurfacecond.png)
-
 ![](images/damage_vs_buildingposition.png)
 
 However,  `roof_type`, `foundation_type` and `ground_floor_type` did seem to have some indicators for damage grade.
 
 ![](images/damage_vs_rooftype.png)
-
 ![](images/damage_vs_foundationtype.png)
-
 ![](images/damage_vs_groundfloortype.png)
 
-In the training set, the classes were fairly imbalanced. A damage level of 2 (which I label as `moderate` intermittently) accounted for approximately 57% of the training set, while a damage level of 3 (`high`) was approximately 33%, and finally, a damage grade of 1 (`low`) accounted for about 10% of the training set. To visualize the imbalance, see the plot below:
+In the training set, the classes were fairly imbalanced. A damage level of 2 (which I label as `moderate`) accounted for approximately 57% of the training set, while a damage level of 3 (`high`) was approximately 33%, and finally, a damage grade of 1 (`low`) accounted for about 10% of the training set. To visualize the imbalance, see the plot below:
 
 ![](images/classbalance.png)
-
-<!-- ![](images/scaled_structure_counts.png) -->
-
 
 ## Modelling
 
 ### Principal Component Analysis
 
-![](images/pca_best.gif)
+After performing the initial EDA, I honed in on the following features to start training models with: `count_floors_pre_eq`, `age`, `area_percentage`, `foundation_type`, `roof_type`, `ground_floor_type`, `has_superstructure_adobe_mud`, `has_superstructure_mud_mortar_stone`, `has_superstructure_stone_flag`, `has_superstructure_cement_mortar_stone`, `has_superstructure_mud_mortar_brick`, `has_superstructure_cement_mortar_brick`, `has_superstructure_timber`, `has_superstructure_bamboo`, `has_superstructure_rc_non_engineered`, `has_superstructure_rc_engineered`, `has_superstructure_other`. While it would take 17 components to account for 90% of the variance in the data:
+
+![](images/pca_variance_explained.png)
+
+I still decided to plot 3 components in 3 dimensions to see if there could be any dilineation.
+
+![](images/pca_3components.gif)
 
 ### Random Forest
 
