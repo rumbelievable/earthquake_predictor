@@ -42,7 +42,9 @@ In the training set, the classes were fairly imbalanced. A damage level of 2 (wh
 
 ### Principal Component Analysis
 
-After performing the initial EDA, I honed in on the following features to start training models with: `count_floors_pre_eq`, `age`, `area_percentage`, `foundation_type`, `roof_type`, `ground_floor_type`, `has_superstructure_adobe_mud`, `has_superstructure_mud_mortar_stone`, `has_superstructure_stone_flag`, `has_superstructure_cement_mortar_stone`, `has_superstructure_mud_mortar_brick`, `has_superstructure_cement_mortar_brick`, `has_superstructure_timber`, `has_superstructure_bamboo`, `has_superstructure_rc_non_engineered`, `has_superstructure_rc_engineered`, `has_superstructure_other`. While it would take 17 components to account for 90% of the variance in the data:
+After performing the initial EDA, I honed in on the following features to start training models with: `count_floors_pre_eq`, `age`, `area_percentage`, `foundation_type`, `roof_type`, `ground_floor_type`, `has_superstructure_adobe_mud`, `has_superstructure_mud_mortar_stone`, `has_superstructure_stone_flag`, `has_superstructure_cement_mortar_stone`, `has_superstructure_mud_mortar_brick`, `has_superstructure_cement_mortar_brick`, `has_superstructure_timber`, `has_superstructure_bamboo`, `has_superstructure_rc_non_engineered`, `has_superstructure_rc_engineered`, `has_superstructure_other`. 
+
+While it would take 17 components to account for 90% of the variance in the data:
 
 ![](images/pca_variance_explained.png)
 
@@ -52,13 +54,13 @@ I still decided to plot 3 components in 3 dimensions to see if there could be an
 
 ### Random Forest
 
-For my initial model, I decided to try a random forest right out of the box, with 200 estimators using these features, in the hopes that a simple model with only a few features may prove to be more applicable to unseen data: `count_floors_pre_eq`, `age`, `area_percentage`, `height_percentage`. I have consolidated all F1-micro scores in the table in the [results](##results) section below.
+For my initial model, I decided to try a random forest right out of the box with 500 estimators using the features noted above. I have consolidated all F1-micro scores in the table in the [results](##results) section below.
 
 ## Results
 
 |  Model  |  Micro Averaged F1-Score  |
 |---------|---------------------------|
-|   RF    |            .44            |
+|   RF    |            .52            |
 
 ## Analysis
 
