@@ -58,9 +58,11 @@ For my initial model, I decided to try a random forest right out of the box with
 
 ## Results
 
-|  Model  |  Micro Averaged F1-Score  |
-|---------|---------------------------|
-|   RF    |            .52            |
+|        Model       |  Micro Averaged F1-Score  |
+|--------------------|---------------------------|
+|  Linear Regression |            .46            | 
+|   Random Forest    |            .52            |
+|   Gradient Boost   |            .60            |
 
 ## Analysis
 
