@@ -59,7 +59,15 @@ if __name__ == "__main__":
     plot_3d_gif = False
     df_train = pd.read_csv('data/train_values.csv')
     df_train_labels = pd.read_csv('data/train_labels.csv')
+    df_train.set_index(df_train['building_id'], inplace=True)
+    df_train.drop(columns='building_id', inplace=True)
+    df_train_labels.set_index(df_train_labels['building_id'], inplace=True)
+    df_train_labels.drop(columns='building_id', inplace=True)
     df_combined = df_train.merge(df_train_labels, left_index=True, right_index=True)
+
+    # df_dummies = df_combined.drop(columns=['geo_level_1_id', 'geo_level_2_id', 'geo_level_3_id'])
+    # df_dummies = pd.get_dummies(df_dummies, columns=['land_surface_condition', 'foundation_type', 'roof_type', 'ground_floor_type', 'other_floor_type',
+    #             'position', 'plan_configuration', 'legal_ownership_status'], drop_first=True)
 
     one = df_combined[df_combined['damage_grade']==1]
     two = df_combined[df_combined['damage_grade']==2]
@@ -67,6 +75,7 @@ if __name__ == "__main__":
 
     if pca:
         X = df_combined[['count_floors_pre_eq', 'age', 'area_percentage', 'height_percentage']]
+        df_int = pd.get_dummies(df_combined, columns=[], drop_first=True)
         ss = StandardScaler()
         X_scaled = ss.fit_transform(X)
         pca = PCA(n_components=3, random_state=42)
@@ -100,7 +109,7 @@ if __name__ == "__main__":
             for n in range(frames):
                 exec('a'+str(n)+'=Image.open("'+str(n)+'.png")')
                 images.append(eval('a'+str(n)))
-            images[0].save('pca.gif',
+            images[0].save('pca_structure_types.gif',
                         save_all=True,
                         append_images=images[1:],
                         duration=150,
@@ -113,7 +122,7 @@ if __name__ == "__main__":
                            'has_superstructure_cement_mortar_brick', 'has_superstructure_timber',
                            'has_superstructure_bamboo', 'has_superstructure_rc_non_engineered',
                             'has_superstructure_rc_engineered', 'has_superstructure_other', 'damage_grade']]
-    df_modelling = df_modelling = pd.get_dummies(df_modelling, prefix=['lsc', 'ft', 'pos'], 
+    df_modelling = pd.get_dummies(df_modelling, prefix=['lsc', 'ft', 'pos'], 
                             columns=['land_surface_condition', 'foundation_type', 'position'], drop_first=True)
     y = df_modelling.pop('damage_grade')
     X = df_modelling.values
@@ -121,4 +130,3 @@ if __name__ == "__main__":
     ss = StandardScaler()
     X_train_scaled = ss.fit_transform(X_train)
     X_test_scaled = ss.transform(X_test)
-    f1_score()
