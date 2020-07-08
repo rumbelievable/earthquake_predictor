@@ -23,13 +23,13 @@ To get an idea of the data, I combined the training labels to the training set t
 
 The above plot represents the damage count for different structure types. As you can see, `rc_engineered`, `rc_non_engineered` and `cement_mortar_brick` had the lowest instances of a damage grade of 3, while `adobe_mud`, `mud_mortar_stone`, `stone_flag` had the most frequent occurrence of a damage grade of 3. 
 
-I also wanted to look into the features with a coded type, like `land_surface_condition`, `roof_type`, `foundation_type`, `ground_floor_type`, and `building_position` to see if they would give any indication to the damage. I found that `land_surface_condition` and `building_position` didn't give much away as you can below:
+I also wanted to look into the features with a coded type, like `land_surface_condition`, `roof_type`, `foundation_type`, `ground_floor_type`, and `building_position` to see if they would give any indication to the damage. I found that `land_surface_condition` and `building_position` didn't give much away as you can see below:
 
 ![](images/damage_vs_landsurfacecond.png)
 
 ![](images/damage_vs_buildingposition.png)
 
-But with `roof_type`, `foundation_type` and `ground_floor_type` did seem to have some indicators for damage grade.
+However,  `roof_type`, `foundation_type` and `ground_floor_type` did seem to have some indicators for damage grade.
 
 ![](images/damage_vs_rooftype.png)
 
