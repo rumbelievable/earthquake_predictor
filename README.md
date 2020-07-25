@@ -28,7 +28,7 @@ I also wanted to look into the features with a coded type, like `land_surface_co
 ![](images/damage_vs_landsurfacecond.png)
 ![](images/damage_vs_buildingposition.png)
 
-However,  `roof_type`, `foundation_type` and `ground_floor_type` did seem to have some indicators for damage grade.
+However, `roof_type`, `foundation_type` and `ground_floor_type` did seem to have some indicators for damage grade.
 
 ![](images/damage_vs_rooftype.png)
 ![](images/damage_vs_foundationtype.png)
@@ -42,31 +42,35 @@ In the training set, the classes were fairly imbalanced. A damage level of 2 (wh
 
 ### Principal Component Analysis
 
-After performing the initial EDA, I honed in on the following features to start training models with: `count_floors_pre_eq`, `age`, `area_percentage`, `foundation_type`, `roof_type`, `ground_floor_type`, `has_superstructure_adobe_mud`, `has_superstructure_mud_mortar_stone`, `has_superstructure_stone_flag`, `has_superstructure_cement_mortar_stone`, `has_superstructure_mud_mortar_brick`, `has_superstructure_cement_mortar_brick`, `has_superstructure_timber`, `has_superstructure_bamboo`, `has_superstructure_rc_non_engineered`, `has_superstructure_rc_engineered`, `has_superstructure_other`. 
-
 While it would take 17 components to account for 90% of the variance in the data:
 
 ![](images/pca_variance_explained.png)
 
 I still decided to plot 3 components in 3 dimensions to see if there could be any dilineation.
 
-![](images/pca_3components.gif)
+![](images/pca_july25.gif)
 
 ### Random Forest
 
-For my initial model, I decided to try a random forest right out of the box with 500 estimators using the features noted above. I have consolidated all F1-micro scores in the table in the [results](##results) section below.
+For my initial model, I decided to try a random forest right out of the box with 500 estimators and getting dummies for the features that were object types. While the `geo_level` features are coded as integers, I decided to keep them as numbers instead of dummying them to see how the random forest would perform. I have consolidated all F1-micro scores in the table in the [results](##results) section below.
 
 ## Results
 
 |        Model       |  Micro Averaged F1-Score  |
 |--------------------|---------------------------|
-|  Linear Regression |            .46            | 
-|   Random Forest    |            .52            |
+|Logistic Regression |            .30            | 
+|   Random Forest    |            .71            |
 |   Gradient Boost   |            .60            |
 
 ## Analysis
 
+There are many permutations and subsets of features that would impact model performance. I could work on modeling this dataset for a long time. After my initial modeling, using all features, the random forest performed best. Below are the feature importances for that model.
+
+![](images/feat_importances.png)
+
 ## Next Steps
+
+There are endless ways to go about engineering features and subsetting, and that is something I am going to be playing around with.
 
 ## Citations
 <sup>1</sup>[Richter's Predictor: Modeling Earthquake Damage](https://www.drivendata.org/competitions/57/nepal-earthquake/page/134/)
