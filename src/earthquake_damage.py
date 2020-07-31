@@ -45,18 +45,27 @@ def standardize(X):
     X_scaled = ss.fit_transform(X)
     return X_scaled
 
-def random_forest(X, y, n_estimators, max_depth):
-    rf = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, n_jobs=-2, random_state=9, class_weight='balanced')
-    X_train, X_test, y_train, y_test = tts(X, y)
-    X_train_scaled = standardize(X_train)
-    X_test_scaled = standardize(X_test)
-    rf.fit(X_train_scaled, y_train)
-    pass
-
+def feat_importance_plot(model, file_name, feature_names):
+    importances = model.feature_importances_
+    indices = np.argsort(importances)[::-1]
+    feat_indices = feature_names[indices]
+    fig, ax = plt.subplots(1,1,figsize=(15,10))
+    ax.set_title("Feature Importances", fontsize=18)
+    ax.bar(range(X.shape[1]), importances[indices],
+            color="teal", align="center")
+    ax.set_xticks(range(X.shape[1]))
+    ax.set_xticklabels(feat_indices, rotation=90)
+    ax.set_ylabel('Feature Importance', fontsize=14) 
+    ax.set_xlabel('Feature', fontsize=14)
+    plt.tight_layout(pad=1)
+    plt.savefig(f'{file_name}.png', dpi=100)
 
 if __name__ == "__main__":
     pca = False
     plot_3d_gif = False
+    rf = False
+    lr = False
+    gb = False
     df_train = pd.read_csv('data/train_values.csv')
     df_train_labels = pd.read_csv('data/train_labels.csv')
     df_train.set_index(df_train['building_id'], inplace=True)
@@ -109,24 +118,37 @@ if __name__ == "__main__":
             for n in range(frames):
                 exec('a'+str(n)+'=Image.open("'+str(n)+'.png")')
                 images.append(eval('a'+str(n)))
-            images[0].save('pca_structure_types.gif',
+            images[0].save('pca_july25.gif',
                         save_all=True,
                         append_images=images[1:],
                         duration=150,
                         loop=0)
-
-    df_modelling = df_combined[['age', 'area_percentage', 'height_percentage', 'land_surface_condition',
-                           'foundation_type', 'position', 'has_superstructure_adobe_mud', 
-                           'has_superstructure_mud_mortar_stone', 'has_superstructure_stone_flag',
-                           'has_superstructure_cement_mortar_stone', 'has_superstructure_mud_mortar_brick',
-                           'has_superstructure_cement_mortar_brick', 'has_superstructure_timber',
-                           'has_superstructure_bamboo', 'has_superstructure_rc_non_engineered',
-                            'has_superstructure_rc_engineered', 'has_superstructure_other', 'damage_grade']]
-    df_modelling = pd.get_dummies(df_modelling, prefix=['lsc', 'ft', 'pos'], 
-                            columns=['land_surface_condition', 'foundation_type', 'position'], drop_first=True)
-    y = df_modelling.pop('damage_grade')
-    X = df_modelling.values
+    df_model = pd.get_dummies(df_combined, columns=['land_surface_condition', 'foundation_type', 'roof_type', 'ground_floor_type', 
+            'other_floor_type', 'other_floor_type', 'position', 'plan_configuration', 'legal_ownership_status'], drop_first=True)
+    y = df_model.pop('damage_grade')
+    X = df_model.values
     X_train, X_test, y_train, y_test = tts(X, y)
     ss = StandardScaler()
     X_train_scaled = ss.fit_transform(X_train)
-    X_test_scaled = ss.transform(X_test)
+    X_test_scaled = ss.fit_transform(X_test)
+
+    if rf:
+        rf = RandomForestClassifier(n_estimators=500, random_state=42, class_weight='balanced', n_jobs=-2)
+        rf.fit(X_train, y_train)
+        rf_preds = rf.predict(X_test)
+        rf_f1 = f1_score(y_test, rf_preds, average='micro')
+        rf_feat_imp = rf.feature_importances_
+        print(rf_f1)
+    if lr:
+        lr = LogisticRegression(C=.001, class_weight='balanced', random_state=42, n_jobs=-2)
+        lr.fit(X_train_scaled, y_train)
+        lr_preds = lr.predict(X_test_scaled)
+        lr_f1 = f1_score(y_test, lr_preds, average='micro')
+        print(lr_f1)
+    if gb:
+        gb = GradientBoostingClassifier(n_estimators=200, random_state=42)
+        gb.fit(X_train, y_train)
+        gb_preds = gb.predict(X_test)
+        gb_f1 = f1_score(y_test, gb_preds, average='micro')
+        gb_feat_imp = gb.feature_importances_
+        print(gb_f1)
